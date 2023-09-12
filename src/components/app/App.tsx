@@ -12,7 +12,7 @@ export type Form = {
   name: string;
   number: string;
 };
-type Contact = {
+export type Contact = {
   id: string;
   name: string;
   number: string;
@@ -20,10 +20,8 @@ type Contact = {
 export type HandleSubmitProps = {
   contactCreate: (contact: Form) => void;
 };
-export type StateProp = {
-  state: State;
-  contactDelete: (id: string) => void;
-};
+export type ContactDeleteProp = (id: string) => void;
+
 class App extends Component<object, State> {
   state: State = {
     contacts: [],
@@ -53,6 +51,12 @@ class App extends Component<object, State> {
     this.setState({ filter: value });
   };
 
+  contactFiltered = (): Contact[] => {
+    return this.state.contacts.filter(({ name }) =>
+      name.toLowerCase().includes(this.state.filter.toLowerCase())
+    );
+  };
+
   render() {
     return (
       <>
@@ -69,7 +73,7 @@ class App extends Component<object, State> {
           <div className='flex flex-col'>
             <Filter filter={this.filterChange} />
 
-            <ContactList state={this.state} contactDelete={this.contactDelete} />
+            <ContactList contacts={this.contactFiltered()} contactDelete={this.contactDelete} />
           </div>
         </div>
       </>
